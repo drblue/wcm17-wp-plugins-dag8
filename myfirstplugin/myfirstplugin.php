@@ -8,12 +8,25 @@ Author URI: http://www.whatsthepoint.se/
 */
 
 function mfp_init() {
-	function mfp_show_latest_posts_shortcode($args) {
+	function mfp_show_latest_posts_shortcode($user_atts) {
+		$default_atts = [
+			'posts' => 3,
+			'title' => 'Latest posts',
+		];
+		$atts = shortcode_atts($default_atts, $user_atts, 'show_latest_posts');
+		/*
+			$atts = [
+				'posts' => 5,
+				'title' => 'Senaste inlägg',
+			];
+		*/
+
 		$latest_posts = new WP_Query([
-			'posts_per_page' => 3,
+			'posts_per_page' => $atts['posts'],
 		]);
 
-		$output = "<h2>Latest posts</h2>";
+		$output = "<h2>{$atts['title']}</h2>";
+		// $output = "<h2>" . $atts['title'] . "</h2>";	// identiskt med ovan rad men lättare att göra fel med alla punkter och fnuttar
 
 		if ($latest_posts->have_posts()) {
 			$output .= "<ul>";
