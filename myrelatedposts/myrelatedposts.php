@@ -8,6 +8,12 @@ Author URI: http://www.whatsthepoint.se/
 */
 
 define('SHORTCODE_TAG', 'related_posts');
+require("My_Related_Posts_Widget.php");
+
+function mrp_widget_init() {
+	register_widget('My_Related_Posts_Widget');
+}
+add_action('widgets_init', 'mrp_widget_init');
 
 function mrp_init() {
 	if (!shortcode_exists(SHORTCODE_TAG)) {
@@ -16,13 +22,13 @@ function mrp_init() {
 }
 add_action('init', 'mrp_init');
 
-function mrp_related_posts_shortcode($user_atts) {
+function mrp_related_posts_shortcode($user_atts = []) {
 	// initialize output variable
 	$output = "";
 
 	// get current post and current post's categories
-	$post = get_post();
-	$categories = get_the_category();
+	$post = get_queried_object();
+	$categories = get_the_category($post->ID);
 
 	$category_ids = [];
 	foreach ($categories as $category) {
