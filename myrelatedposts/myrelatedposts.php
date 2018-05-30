@@ -17,6 +17,9 @@ function mrp_init() {
 add_action('init', 'mrp_init');
 
 function mrp_related_posts_shortcode($user_atts) {
+	// initialize output variable
+	$output = "";
+
 	// get current post and current post's categories
 	$post = get_post();
 	$categories = get_the_category();
@@ -26,6 +29,18 @@ function mrp_related_posts_shortcode($user_atts) {
 		$category_ids[] = $category->term_id;
 	}
 
+	$default_atts = [
+		'categories' => false,
+	];
+	$atts = shortcode_atts($default_atts, $user_atts, SHORTCODE_TAG);
+	if ($atts['categories'] !== false) {
+		// split string in $atts['categories'] on "," character to an array
+		$category_ids = explode(',', $atts['categories']);
+	}
+
+	// output category ids to get posts from
+	$output .= "<pre>category_ids = " . print_r($category_ids, true) . "</pre>";
+
 	// get posts related to the current post
 	$related_posts = new WP_Query([
 		'category__in' => $category_ids, // array
@@ -33,8 +48,6 @@ function mrp_related_posts_shortcode($user_atts) {
 		'posts_per_page' => 3,
 	]);
 
-	// initialize output variable
-	$output = "";
 
 	// did we get any posts at all back?
 	if ($related_posts->have_posts()) {
@@ -52,9 +65,6 @@ function mrp_related_posts_shortcode($user_atts) {
 			$output .= "<li><a href='{$post_url}'>{$post_title}</a></li>";
 		}
 		$output .= "</ul>";
-	} else {
-		// nope, no posts
-		$output .= "Sorry, no related posts found.";
 	}
 
 	return $output;
