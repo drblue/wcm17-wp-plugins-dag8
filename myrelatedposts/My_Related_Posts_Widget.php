@@ -40,8 +40,7 @@ class My_Related_Posts_Widget extends WP_Widget {
 		}
 
 		// related posts
-		$related_posts = mrp_related_posts_shortcode();
-		echo $related_posts;
+		echo mrp_get_related_posts();
 
 		// end widget
 		echo $args['after_widget'];

@@ -22,23 +22,38 @@ function mrp_init() {
 }
 add_action('init', 'mrp_init');
 
-function mrp_related_posts_shortcode($user_atts = []) {
+// function that runs when shortcode [related_posts] is encountered
+function mrp_related_posts_shortcode($user_atts) {
+	$output = "<h2>Related Posts</h2>";
+	$output .= mrp_get_related_posts($user_atts);
+
+	return $output;
+}
+
+// get related posts and return an unordered html-list
+function mrp_get_related_posts($user_atts = []) {
 	// initialize output variable
 	$output = "";
 
 	// get current post and current post's categories
-	$post = get_queried_object();
+	$post = get_queried_object(); // have to use get_queried_object instead of get_post as a widget is _outside_ of the main loop
 	$categories = get_the_category($post->ID);
 
+	// get categories from current post
 	$category_ids = [];
 	foreach ($categories as $category) {
 		$category_ids[] = $category->term_id;
 	}
 
+	// set default attribute categories to false so we can check if it has been changed
 	$default_atts = [
 		'categories' => false,
 	];
+
+	// merge any attributes the user has specified with our default attributes
 	$atts = shortcode_atts($default_atts, $user_atts, SHORTCODE_TAG);
+
+	// if the attribute categories isn't false here, we know the user has specified the attribute
 	if ($atts['categories'] !== false) {
 		// split string in $atts['categories'] on "," character to an array
 		$category_ids = explode(',', $atts['categories']);
@@ -53,7 +68,6 @@ function mrp_related_posts_shortcode($user_atts = []) {
 		'post__not_in' => [$post->ID],
 		'posts_per_page' => 3,
 	]);
-
 
 	// did we get any posts at all back?
 	if ($related_posts->have_posts()) {
@@ -71,6 +85,9 @@ function mrp_related_posts_shortcode($user_atts = []) {
 			$output .= "<li><a href='{$post_url}'>{$post_title}</a></li>";
 		}
 		$output .= "</ul>";
+	} else {
+		// nope, no posts
+		$output .= "Sorry, no related posts found.";
 	}
 
 	return $output;
