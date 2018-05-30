@@ -38,8 +38,8 @@ function mrp_related_posts_shortcode($user_atts) {
 		$category_ids = explode(',', $atts['categories']);
 	}
 
-	// output category ids to get posts from
-	$output .= "<pre>category_ids = " . print_r($category_ids, true) . "</pre>";
+	// output category ids to get posts from for debugging
+	//$output .= "<pre>category_ids = " . print_r($category_ids, true) . "</pre>";
 
 	// get posts related to the current post
 	$related_posts = new WP_Query([
