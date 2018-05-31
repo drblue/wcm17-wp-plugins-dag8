@@ -40,7 +40,7 @@ class My_Related_Posts_Widget extends WP_Widget {
 		}
 
 		// related posts
-		echo mrp_get_related_posts();
+		echo mrp_get_related_posts(['categories' => $instance['categories']]);
 
 		// end widget
 		echo $args['after_widget'];
@@ -61,6 +61,8 @@ class My_Related_Posts_Widget extends WP_Widget {
 			$title = __( 'Related Posts', 'text_domain' );
 		}
 
+		$categories = $instance['categories'];
+
 		?>
 		<!-- title -->
 		<p>
@@ -74,6 +76,21 @@ class My_Related_Posts_Widget extends WP_Widget {
 				name="<?php echo $this->get_field_name( 'title' ); ?>"
 				type="text"
 				value="<?php echo esc_attr( $title ); ?>"
+			/>
+		</p>
+
+		<!-- categories -->
+		<p>
+			<label for="<?php echo $this->get_field_name( 'categories' ); ?>">
+				<?php _e( 'Categories:' ); ?>
+			</label>
+
+			<input
+				class="widefat"
+				id="<?php echo $this->get_field_id( 'categories' ); ?>"
+				name="<?php echo $this->get_field_name( 'categories' ); ?>"
+				type="text"
+				value="<?php echo esc_attr( $categories ); ?>"
 			/>
 		</p>
 
@@ -93,6 +110,7 @@ class My_Related_Posts_Widget extends WP_Widget {
 	public function update( $new_instance, $old_instance ) {
 		$instance = array();
 		$instance['title'] = ( !empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
+		$instance['categories'] = ( !empty( $new_instance['categories'] ) ) ? strip_tags( $new_instance['categories'] ) : '';
 
 		return $instance;
 	}
