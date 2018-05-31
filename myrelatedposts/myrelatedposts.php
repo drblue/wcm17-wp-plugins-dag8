@@ -8,7 +8,8 @@ Author URI: http://www.whatsthepoint.se/
 */
 
 define('SHORTCODE_TAG', 'related_posts');
-require("My_Related_Posts_Widget.php");
+require(dirname(__FILE__) . "/admin.php");
+require(dirname(__FILE__) . "/My_Related_Posts_Widget.php");
 
 function mrp_widget_init() {
 	register_widget('My_Related_Posts_Widget');
