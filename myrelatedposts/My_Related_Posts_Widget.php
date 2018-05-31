@@ -25,7 +25,7 @@ class My_Related_Posts_Widget extends WP_Widget {
 	 */
 	public function widget( $args, $instance ) {
 		// check if we are on a single post, otherwise bail
-		if (!is_single()) {
+		if (!is_single() && empty($instance['categories'])) {
 			return;
 		}
 

@@ -53,8 +53,8 @@ function mrp_get_related_posts($user_atts = []) {
 	// merge any attributes the user has specified with our default attributes
 	$atts = shortcode_atts($default_atts, $user_atts, SHORTCODE_TAG);
 
-	// if the attribute categories isn't false here, we know the user has specified the attribute
-	if ($atts['categories'] !== false) {
+	// if the attribute categories isn't false-y here (since it can be an empty string from our widget), we know the user has specified the attribute
+	if ($atts['categories'] != false) {
 		// split string in $atts['categories'] on "," character to an array
 		$category_ids = explode(',', $atts['categories']);
 	}
