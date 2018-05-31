@@ -17,6 +17,8 @@ function mrp_widget_init() {
 add_action('widgets_init', 'mrp_widget_init');
 
 function mrp_init() {
+	$add_to_posts = get_option('mrp_add_to_posts');
+
 	if (!shortcode_exists(SHORTCODE_TAG)) {
 		add_shortcode(SHORTCODE_TAG, 'mrp_related_posts_shortcode');
 	}
@@ -25,7 +27,18 @@ add_action('init', 'mrp_init');
 
 // function that runs when shortcode [related_posts] is encountered
 function mrp_related_posts_shortcode($user_atts) {
-	$output = "<h2>Related Posts</h2>";
+	$title = get_option('mrp_shortcode_title') ?: 'Related Posts';
+
+	// same as above but a LOT more verbose
+	/*
+	if (get_option('mrp_shortcode_title') === false) {
+		$title = get_option('mrp_shortcode_title');
+	} else {
+		$title = 'Related Posts';
+	}
+	*/
+
+	$output = "<h2>{$title}</h2>";
 	$output .= mrp_get_related_posts($user_atts);
 
 	return $output;

@@ -37,3 +37,26 @@ function mrp_options_page() {
 	);
 }
 add_action('admin_menu', 'mrp_options_page');
+
+function mrp_admin_init() {
+	add_settings_section("myrelatedposts_options", "Related Posts Settings", null, "myrelatedposts");
+
+	add_settings_field("mrp_shortcode_title", "Default Title for [related_posts]", "mrp_options_shortcode_title", "myrelatedposts", "myrelatedposts_options");
+	add_settings_field("mrp_add_to_posts", "Automatically add related posts to all blog posts?", "mrp_options_add_to_posts", "myrelatedposts", "myrelatedposts_options");
+
+	register_setting("myrelatedposts_options", "mrp_shortcode_title");
+	register_setting("myrelatedposts_options", "mrp_add_to_posts");
+}
+add_action('admin_init', 'mrp_admin_init');
+
+function mrp_options_shortcode_title() {
+	?>
+		<input type="text" name="mrp_shortcode_title" id="mrp_shortcode_title" value="<?php echo get_option('mrp_shortcode_title'); ?>" />
+	<?php
+}
+
+function mrp_options_add_to_posts() {
+	?>
+		<input type="checkbox" name="mrp_add_to_posts" value="1" <?php checked(1, get_option('mrp_add_to_posts'), true); ?> />
+	<?php
+}
