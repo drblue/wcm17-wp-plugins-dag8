@@ -19,14 +19,34 @@ add_action('widgets_init', 'mrp_widget_init');
 function mrp_init() {
 	$add_to_posts = get_option('mrp_add_to_posts');
 
-	if (!shortcode_exists(SHORTCODE_TAG)) {
+	if (get_option('mrp_add_to_posts') && !shortcode_exists(SHORTCODE_TAG)) {
+		// automatically add related posts to blog posts is active
+		// so render just an empty output
+		add_shortcode(SHORTCODE_TAG, 'mrp_related_posts_blank_shortcode');
+	} else {
 		add_shortcode(SHORTCODE_TAG, 'mrp_related_posts_shortcode');
 	}
 }
 add_action('init', 'mrp_init');
 
+// function that inserts related posts to blog posts
+function mrp_add_to_posts($content) {
+	if (is_single() && get_option('mrp_add_to_posts')) {
+		return $content . mrp_related_posts_shortcode();
+	}
+	return $content;
+}
+add_filter('the_content', 'mrp_add_to_posts');
+
 // function that runs when shortcode [related_posts] is encountered
-function mrp_related_posts_shortcode($user_atts) {
+// and automatically add to posts is active
+function mrp_related_posts_blank_shortcode() {
+	return "";
+}
+
+
+// function that runs when shortcode [related_posts] is encountered
+function mrp_related_posts_shortcode($user_atts = []) {
 	$title = get_option('mrp_shortcode_title') ?: 'Related Posts';
 
 	// same as above but a LOT more verbose
