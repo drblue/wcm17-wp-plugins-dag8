@@ -3,7 +3,7 @@
 define('OWM_API_KEY', '5ae275d1a0023fc435486dc31a45cd67');
 
 function owm_todays_forecast($city, $country) {
-	$response = wp_remote_get("http://wait.test");
+	$response = wp_remote_get("http://api.openweathermap.org/data/2.5/weather?q={$city},{$country}&appid=" . OWM_API_KEY);
 	$output = "";
 
 	if (is_wp_error($response)) {
