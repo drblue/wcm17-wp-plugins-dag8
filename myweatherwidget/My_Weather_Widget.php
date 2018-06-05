@@ -27,6 +27,8 @@ class My_Weather_Widget extends WP_Widget {
 	 */
 	public function widget($args, $instance) {
 		$title = apply_filters('widget_title', $instance['title']);
+		$city = $instance['city'];
+		$country = $instance['country'];
 
 		// start widget
 		echo $args['before_widget'];
@@ -41,7 +43,7 @@ class My_Weather_Widget extends WP_Widget {
 		 *
 		 * @todo: get these values from this widget instance's settings
 		 */
-		echo owm_todays_forecast('Lund', 'SE');
+		echo owm_todays_forecast($city, $country);
 
 		// end widget
 		echo $args['after_widget'];
@@ -55,14 +57,23 @@ class My_Weather_Widget extends WP_Widget {
 	 * @param array $instance Previously saved values from database.
 	 */
 	public function form($instance) {
-		if (isset($instance[ 'title' ])) {
-			$title = $instance[ 'title' ];
-		}
-		else {
+		if (isset($instance['title'])) {
+			$title = $instance['title'];
+		} else {
 			$title = __('Current Weather', 'text_domain');
 		}
 
-		$categories = $instance['categories'];
+		if (isset($instance['city'])) {
+			$city = $instance['city'];
+		} else {
+			$city = __('Lund', 'text_domain');
+		}
+
+		if (isset($instance['country'])) {
+			$country = $instance['country'];
+		} else {
+			$country = __('SE', 'text_domain');
+		}
 
 		?>
 
@@ -78,6 +89,36 @@ class My_Weather_Widget extends WP_Widget {
 					name="<?php echo $this->get_field_name('title'); ?>"
 					type="text"
 					value="<?php echo esc_attr($title); ?>"
+				/>
+			</p>
+
+			<!-- city -->
+			<p>
+				<label for="<?php echo $this->get_field_name('city'); ?>">
+					<?php _e('City:'); ?>
+				</label>
+
+				<input
+					class="widefat"
+					id="<?php echo $this->get_field_id('city'); ?>"
+					name="<?php echo $this->get_field_name('city'); ?>"
+					type="text"
+					value="<?php echo esc_attr($city); ?>"
+				/>
+			</p>
+
+			<!-- country -->
+			<p>
+				<label for="<?php echo $this->get_field_name('country'); ?>">
+					<?php _e('Country:'); ?>
+				</label>
+
+				<input
+					class="widefat"
+					id="<?php echo $this->get_field_id('country'); ?>"
+					name="<?php echo $this->get_field_name('country'); ?>"
+					type="text"
+					value="<?php echo esc_attr($country); ?>"
 				/>
 			</p>
 
@@ -97,6 +138,8 @@ class My_Weather_Widget extends WP_Widget {
 	public function update($new_instance, $old_instance) {
 		$instance = [];
 		$instance['title'] = (!empty($new_instance['title'])) ? strip_tags($new_instance['title']) : '';
+		$instance['city'] = (!empty($new_instance['city'])) ? strip_tags($new_instance['city']) : 'Lund';
+		$instance['country'] = (!empty($new_instance['country'])) ? strip_tags($new_instance['country']) : 'SE';
 
 		return $instance;
 	}

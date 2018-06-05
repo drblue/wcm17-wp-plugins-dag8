@@ -6,14 +6,48 @@ function owm_todays_forecast($city, $country) {
 	$response = wp_remote_get("http://api.openweathermap.org/data/2.5/weather?q={$city},{$country}&appid=" . OWM_API_KEY);
 	$output = "";
 
+	// var_dump($response);
+
 	if ($response['response']['code'] === 200) {
 		// all ok
+
+		// decode forecast into php object
 		$forecast = json_decode($response['body']);
-		$output = "The temperature in {$city}, {$country} is currently {$forecast->main->temp} K.";
+
+		// convert temperature to celsius
+		$temp = kelvin_to_celsius($forecast->main->temp);
+
+		// extract current weather conditions
+		$current_conditions = [];
+		foreach($forecast->weather as $condition) {
+			array_push($current_conditions, $condition->main);
+		}
+
+		$output .= "<h4>Current weather in {$forecast->name}, {$forecast->sys->country}:</h4>";
+		$output .= "Temperature: {$temp} C<br />";
+		$output .= "Wind: {$forecast->wind->speed} m/s at {$forecast->wind->deg} degrees<br />";
+		$output .= "Conditions: " . implode(" | ", $current_conditions) . "<br />";
 
 	} else {
-		$output .= "Something went very wrong, didn't get OK back from query.";
+		if (!empty($response->body)) {
+			$error = json_decode($response->body);
+			if ($error->message) {
+				$error_msg = $error->message;
+			}
+		} else {
+			$error_msg = $response['response']['message'];
+		}
+
+		if (!empty($error_msg)) {
+			$output .= "Something went wrong: {$error_msg}";
+		} else {
+			$output .= "Something went very wrong, didn't get OK back from query and unknown error occured.";
+		}
 	}
 
 	return $output;
+}
+
+function kelvin_to_celsius($degrees_kelvin) {
+	return $degrees_kelvin - 273.15;
 }
