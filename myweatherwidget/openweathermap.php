@@ -3,10 +3,18 @@
 define('OWM_API_KEY', '5ae275d1a0023fc435486dc31a45cd67');
 
 function owm_todays_forecast($city, $country) {
-	$response = wp_remote_get("http://api.openweathermap.org/data/2.5/weather?q={$city},{$country}&appid=" . OWM_API_KEY);
+	$response = wp_remote_get("http://wait.test");
 	$output = "";
 
-	// var_dump($response);
+	if (is_wp_error($response)) {
+		$error_messages = [];
+		foreach ($response->errors as $error) {
+			$error_message = implode(', ', $error);
+			array_push($error_messages, $error_message);
+		}
+
+		return "Critical error: " . implode(", ", $error_messages);
+	}
 
 	if ($response['response']['code'] === 200) {
 		// all ok
