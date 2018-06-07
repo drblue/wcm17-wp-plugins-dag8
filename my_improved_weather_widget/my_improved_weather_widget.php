@@ -25,8 +25,12 @@ function miww_enqueue_scripts() {
 add_action('wp_enqueue_scripts', 'miww_enqueue_scripts');
 
 function miww_ajax_get_todays_forecast() {
+	// get which city and country that we want to get forecast for
+	$city = $_POST['city'];
+	$country = $_POST['country'];
+
 	// get forecast for Lund
-	echo owm_todays_forecast('Lund', 'SE');
+	echo owm_todays_forecast($city, $country);
 
 	// screw this guys, I'm going höme
 	wp_die();

@@ -47,6 +47,11 @@ class My_Improved_Weather_Widget extends WP_Widget {
 			<div class="miww_todays_forecast">
 				<em>Loading...</em>
 			</div>
+			<script>
+				jQuery(document).ready(function($) {
+					miww_get_todays_forecast('<?php echo $args['widget_id']; ?>', '<?php echo $city; ?>', '<?php echo $country; ?>');
+				});
+			</script>
 		<?php
 
 		// end widget

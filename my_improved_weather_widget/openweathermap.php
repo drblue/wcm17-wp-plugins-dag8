@@ -33,7 +33,7 @@ function owm_todays_forecast($city, $country) {
 
 		$output .= "Temperature: {$temp} C<br />";
 		$output .= "Wind: {$forecast->wind->speed} m/s at {$forecast->wind->deg} degrees<br />";
-		$output .= "Conditions: " . implode(" | ", $current_conditions) . "<br />";
+		$output .= "Conditions: " . implode(" | ", $current_conditions) . "";
 
 	} else {
 		if (!empty($response->body)) {
