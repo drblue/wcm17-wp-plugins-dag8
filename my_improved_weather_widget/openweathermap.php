@@ -25,6 +25,9 @@ function owm_todays_forecast($city, $country) {
 		// convert temperature to celsius
 		$temp = kelvin_to_celsius($forecast->main->temp);
 
+		// round temperature to 1/10 degree
+		$temp = round($temp, 1);
+
 		// extract current weather conditions
 		$current_conditions = [];
 		foreach($forecast->weather as $condition) {

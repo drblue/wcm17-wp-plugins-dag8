@@ -43,8 +43,9 @@ class My_Improved_Weather_Widget extends WP_Widget {
 		 *
 		 * @todo: get these values from this widget instance's settings
 		 */
+		$city_underscores = str_replace(' ', '_', $city); // New York => New_York
 		?>
-			<div class="miww_todays_forecast">
+			<div class="miww_todays_forecast" data-city="<?php echo $city_underscores; ?>" data-country="<?php echo $country; ?>">
 				<em>Loading...</em>
 			</div>
 		<?php
