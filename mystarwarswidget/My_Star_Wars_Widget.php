@@ -35,8 +35,8 @@ class My_Star_Wars_Widget extends WP_Widget {
 		}
 
 		// star wars trivia
-		echo swapi_films();
-		// echo swapi_people();
+		// echo swapi_films();
+		echo swapi_people();
 
 		// end widget
 		echo $args['after_widget'];

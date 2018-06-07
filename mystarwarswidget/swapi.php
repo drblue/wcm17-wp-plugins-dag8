@@ -35,6 +35,20 @@ function swapi_films() {
 
 function swapi_people() {
 	$response = wp_remote_get('https://swapi.co/api/people/');
+
+	$result = swapi_people_decode($response);
+	$output = $result['output'];
+
+	while ($result['next'] !== null) {
+		$response = wp_remote_get($result['next']);
+		$result = swapi_people_decode($response);
+		$output .= $result['output'];
+	}
+
+	return $output;
+}
+
+function swapi_people_decode($response) {
 	$output = "";
 
 	if ($response['response']['code'] === 200) {
@@ -52,5 +66,10 @@ function swapi_people() {
 		$output .= "Something went very wrong, didn't get OK back from query.";
 	}
 
-	return $output;
+	$result = [
+		'output' => $output,
+		'next' => $body->next,
+	];
+
+	return $result;
 }
